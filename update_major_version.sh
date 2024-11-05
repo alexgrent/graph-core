@@ -1,12 +1,4 @@
-#!/bin/sh
-
-current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-echo $current_version 
-major=${current_version%%.*} 
-new_major=$((major + 1)) 
-new_version="${new_major}.0.0"
-echo $new_version 
-mvn versions:set -DnewVersion=$new_versio#!/bin/bash
+#!/bin/bash
 
 # Get the current project version using Maven
 current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
@@ -22,5 +14,3 @@ echo "New version: $new_version"
 
 # Set the new version using Maven
 mvn versions:set -DnewVersion=$new_version
-
-
