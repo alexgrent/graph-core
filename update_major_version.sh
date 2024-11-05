@@ -1,6 +1,6 @@
 #!/bin/sh
 
-current_version=$(mvn -f Graph_core_PIPELINE/pom.xml help:evaluate -Dexpression=project.version -q -DforceStdout)
+current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 echo $current_version 
 major=${current_version%%.*} 
 new_major=$((major + 1)) 
