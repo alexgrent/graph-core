@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -15,7 +16,7 @@
     <name>Graph Core Next Generation</name>
 
     <description>
-        The Reactome Graph Project aims to model the Reactome knowledgebase into a interconnected graph. For more
+        The Reactome Graph Project aims to model the Reactome knowledgebase into an interconnected graph. For more
         information visit the reactome github repository.
     </description>
 
@@ -39,14 +40,13 @@
         </developer>
     </developers>
 
-
     <properties>
-        <!--build-->
+        <!-- Build properties -->
         <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
 
     <dependencies>
-        <!-- This is everything needed to work with Spring Data Neo4j 6.0. -->
+        <!-- Dependencies for the project -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-neo4j</artifactId>
@@ -58,17 +58,16 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Reflection library -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
         </dependency>
 
-        <!--Aspectj AOP -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
@@ -101,11 +100,13 @@
             <groupId>org.jodd</groupId>
             <artifactId>jodd-bean</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -136,29 +137,23 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
                 <configuration>
-                    <argLine>
-                        --illegal-access=permit
-                    </argLine>
+                    <argLine>--illegal-access=permit</argLine>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven.failsafe.version}</version>
                 <configuration>
-                    <argLine>
-                        --illegal-access=permit
-                    </argLine>
+                    <argLine>--illegal-access=permit</argLine>
                 </configuration>
             </plugin>
 
-            <!--Plugin needed to force maven resources to latest version. Default version contains a bug-->
-            <!--preventing maven to filter resources containg a @ symbol-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven.resources.version}</version>
-
                 <configuration>
                     <escapeString>\</escapeString>
                 </configuration>
@@ -195,10 +190,6 @@
                 </executions>
             </plugin>
 
-            <!--
-                Maven plugin is necessary to test AspectJ when running in command line.
-                Running on IntelliJ will fire the ajc and this will work automatically.
-            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
@@ -214,12 +205,11 @@
                             <weaveMainSourceFolder>true</weaveMainSourceFolder>
                         </configuration>
                         <goals>
-                            <goal>compile</goal>       <!-- use this goal to weave all your main classes -->
-                            <goal>test-compile</goal>  <!-- use this goal to weave all your test classes -->
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <!-- IMPORTANT -->
                         <phase>process-sources</phase>
                         <configuration>
                             <weaveMainSourceFolder>true</weaveMainSourceFolder>
@@ -252,37 +242,43 @@
         </plugins>
     </build>
 
-    <repositories>
-        <!-- EBI repo -->
+    <distributionManagement>
         <repository>
-            <id>nexus-ebi-repo</id>
-            <name>The EBI internal repository</name>
-            <url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-repo/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <id>local-nexus-repo</id>
+            <name>Local Nexus Release Repository</name>
+            <url>http://localhost:8081/repository/maven-releases/</url>
         </repository>
-        <!-- EBI SNAPSHOT repo -->
-        <repository>
-            <id>nexus-ebi-snapshot-repo</id>
-            <name>The EBI internal snapshot repository</name>
-            <url>https://www.ebi.ac.uk/Tools/maven/repos/content/groups/ebi-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+        <snapshotRepository>
+            <id>local-nexus-snapshot-repo</id>
+            <name>Local Nexus Snapshot Repository</name>
+            <url>http://localhost:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
-        <!-- SBGN -->
+    <repositories>
         <repository>
-            <id>biopax</id>
-            <name>BioPax Repository</name>
-            <url>http://www.biopax.org/m2repo/releases/</url>
+            <id>local-nexus-repo</id>
+            <name>Local Nexus Repository</name>
+            <url>http://localhost:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>local-nexus-plugin-repo</id>
+            <url>http://localhost:8081/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
